@@ -1,6 +1,7 @@
 package com.catharinafrindt.platformer
 
 import android.graphics.Canvas
+import android.graphics.Matrix
 import android.graphics.Paint
 import android.util.Log
 
@@ -16,7 +17,7 @@ abstract class Entity {
     }
 
     open fun update(dt: Float) {}
-    open fun render(canvas: Canvas, paint: Paint) {}
+    open fun render(canvas: Canvas, transform: Matrix, paint: Paint) {}
     open fun onCollision(that: Entity) {} // Notify the Entity about collisions
 
     var left: Float

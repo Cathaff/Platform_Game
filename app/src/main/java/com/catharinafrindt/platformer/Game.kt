@@ -2,17 +2,17 @@ package com.catharinafrindt.platformer
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Matrix
 import android.graphics.Paint
+import android.graphics.PointF
 import android.os.SystemClock.uptimeMillis
 import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import kotlin.random.Random
 
-const val STAGE_WIDTH = 1280
-const val STAGE_HEIGHT = 672
+//const val pixelsPerMeter = 50
 var RNG = Random(uptimeMillis())
-const val pixelsPerMeter = 100
 lateinit var engine : Game
 
 class Game(context: Context) : SurfaceView(context), Runnable, SurfaceHolder.Callback {
@@ -20,34 +20,55 @@ class Game(context: Context) : SurfaceView(context), Runnable, SurfaceHolder.Cal
     init {
         engine = this
         holder?.addCallback(this)
-        holder?.setFixedSize(STAGE_WIDTH, STAGE_HEIGHT)
+        holder?.setFixedSize(screenWidth(), screenHeight())
     }
 
 
     private lateinit var gameThread : Thread
     @Volatile var isRunning : Boolean = false
+
+    private val camera = Viewport(screenWidth(), screenHeight(), 0.0f, 2.0f)
     private val level: LevelManager = LevelManager(TestLevel())
 
 
     override fun run() {
         Log.d(tag, "run()")
         while(isRunning) {
+            // calculate the delta time
+            // update all entities passing in dt
+            // handle input
             update()
             render()
         }
     }
 
-    fun worldToScreenX(worldDistance : Float) = (worldDistance * pixelsPerMeter).toInt()
-    fun worldToScreenY(worldDistance : Float) = (worldDistance * pixelsPerMeter).toInt()
-    fun screenToWorldX(pixelDistance: Float) = pixelDistance / pixelsPerMeter
-    fun screenToWorldY(pixelDistance: Float) = pixelDistance / pixelsPerMeter
+    fun worldToScreenX(worldDistance : Float) = camera.worldToScreenX(worldDistance)
+    fun worldToScreenY(worldDistance : Float) = camera.worldToScreenY(worldDistance)
+    fun screenHeight() = context.resources.displayMetrics.heightPixels
+    fun screenWidth() = context.resources.displayMetrics.widthPixels
 
     private fun render() {
         val canvas = holder?.lockCanvas() ?: return
         canvas.drawColor(Color.BLACK)
         val paint = Paint()
-        level.entities.forEach { it.render(canvas, paint) }
+        var transform = Matrix()
+        var position: PointF
+        camera.lookAt(2.5f, 0.5f)
+
+        val visible = buildVisibleSet()
+
+
+        visible.forEach {
+            transform.reset()
+            position = camera.worldToScreen(it)
+            transform.postTranslate(position.x, position.y)
+            it.render(canvas, transform, paint)
+        }
         holder.unlockCanvasAndPost(canvas)
+    }
+
+    private fun buildVisibleSet() : List<Entity> {
+        return level.entities.filter { camera.inView(it) }
     }
 
     private fun update() {
@@ -75,6 +96,7 @@ class Game(context: Context) : SurfaceView(context), Runnable, SurfaceHolder.Cal
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
         Log.d(tag, "surfaceChanged(width:$width, height:$height)")
+        Log.d(tag, "screen width${screenWidth()}, height:${screenHeight()}")
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
