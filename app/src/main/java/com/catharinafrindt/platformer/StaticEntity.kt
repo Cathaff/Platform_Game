@@ -14,18 +14,7 @@ open class StaticEntity(spriteName: String, x: Float, y: Float) : Entity() {
         this.y = y
         width = 1.0f
         height = 1.0f
-        bitmap = loadBitmap(spriteName)
-    }
-
-    protected fun loadBitmap(spriteName: String): Bitmap {
-        val widthInPixels = ceil(engine.worldToScreenX(width))
-        val heightInPixels = ceil(engine.worldToScreenY(height))
-        return BitmapUtils.loadScaledBitmap(
-            engine.context,
-            spriteName,
-            widthInPixels.toInt(),
-            heightInPixels.toInt()
-        )
+        bitmap = engine.bitmapPool.createBitmap(spriteName, width, height)
     }
 
     override fun render(canvas: Canvas, transform: Matrix, paint: Paint) {

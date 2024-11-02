@@ -19,6 +19,16 @@ class TestLevel : LevelData() {
             intArrayOf(5, 0, 2, 3, 4, 0, 0, 5, 0),
             intArrayOf(5, 0, 0, 0, 0, 0, 0, 5, 0),
             intArrayOf(7, 3, 3, 3, 3, 3, 3, 6, 0),
+            intArrayOf(2, 3, 3, 3, 3, 3, 3, 3, 4),
+            intArrayOf(2, 3, 3, 3, 3, 3, 3, 3, 4),
+            intArrayOf(2, 3, 3, 3, 3, 3, 3, 3, 4),
+            intArrayOf(2, 3, 3, 3, 3, 3, 3, 3, 4),
+            intArrayOf(2, 3, 3, 3, 3, 3, 3, 3, 4),
+            intArrayOf(2, 3, 3, 3, 3, 3, 3, 3, 4),
+            intArrayOf(2, 3, 3, 3, 3, 3, 3, 3, 4),
+            intArrayOf(2, 3, 3, 3, 3, 3, 3, 3, 4),
+            intArrayOf(2, 3, 3, 3, 3, 3, 3, 3, 4),
+
         )
     }
 }

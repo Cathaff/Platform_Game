@@ -12,7 +12,6 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import kotlin.random.Random
 
-//const val pixelsPerMeter = 50
 var RNG = Random(uptimeMillis())
 lateinit var engine : Game
 val NANOS_TO_SECOND = 1.0f / 1000000000.0f
@@ -31,6 +30,7 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
     @Volatile var isRunning : Boolean = false
     var inputs = InputManager() // a valid null-controller
     private val camera = Viewport(screenWidth(), screenHeight(), 0.0f, 8.0f)
+    val bitmapPool = BitmapPool(this)
     private val level: LevelManager = LevelManager(TestLevel())
     fun worldToScreenX(worldDistance: Float) = camera.worldToScreenX(worldDistance)
     fun worldToScreenY(worldDistance: Float) = camera.worldToScreenY(worldDistance)
