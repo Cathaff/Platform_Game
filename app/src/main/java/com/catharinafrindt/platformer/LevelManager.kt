@@ -3,7 +3,7 @@ package com.catharinafrindt.platformer
 class LevelManager(data: LevelData) {
     val entities = ArrayList<Entity>()
     var levelHeight: Float = 0.0f
-    lateinit var player: DynamicEntity
+    lateinit var player: Player
     private val entitiesToAdd = ArrayList<Entity>()
     private val entitiesToRemove = ArrayList<Entity>()
 
@@ -63,7 +63,7 @@ class LevelManager(data: LevelData) {
 
     private fun createEntity(spriteName: String, x: Float, y: Float) {
         if (spriteName == PLAYER) {
-            player = DynamicEntity(spriteName, x, y)
+            player = Player(spriteName, x, y)
             addEntity(player)
         } else {
             addEntity(StaticEntity(spriteName, x, y))

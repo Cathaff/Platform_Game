@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_gravity="bottom"
+    android:padding="@dimen/button_size"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/touch_controller">
+
+    <Button
+        android:id="@+id/gamepad_left"
+        android:layout_width="@dimen/button_size"
+        android:layout_height="@dimen/button_size"
+        app:layout_constraintBottom_toTopOf="@id/gamepad_down"
+        app:layout_constraintRight_toLeftOf="@id/gamepad_up"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <Button
+        android:id="@+id/gamepad_up"
+        android:layout_width="@dimen/button_size"
+        android:layout_height="@dimen/button_size"
+        app:layout_constraintBottom_toTopOf="@id/gamepad_left"
+        app:layout_constraintLeft_toRightOf="@id/gamepad_left"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <Button
+        android:id="@+id/gamepad_right"
+        android:layout_width="@dimen/button_size"
+        android:layout_height="@dimen/button_size"
+        app:layout_constraintLeft_toRightOf="@id/gamepad_up"
+        app:layout_constraintBottom_toTopOf="@id/gamepad_down"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <Button
+        android:id="@+id/gamepad_down"
+        android:layout_width="@dimen/button_size"
+        android:layout_height="@dimen/button_size"
+        app:layout_constraintTop_toBottomOf="@id/gamepad_left"
+        app:layout_constraintLeft_toRightOf="@id/gamepad_left"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <Button
+        android:id="@+id/gamepad_jump"
+        android:layout_width="@dimen/button_size"
+        android:layout_height="@dimen/button_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gamepad_up"
+        tools:ignore="SpeakableTextPresentCheck" />
+</androidx.constraintlayout.widget.ConstraintLayout>

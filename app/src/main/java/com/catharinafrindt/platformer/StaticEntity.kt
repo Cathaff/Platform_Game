@@ -7,19 +7,25 @@ import android.graphics.Paint
 import kotlin.math.ceil
 
 open class StaticEntity(spriteName: String, x: Float, y: Float) : Entity() {
-    val bitmap : Bitmap
+    var bitmap: Bitmap
 
     init {
         this.x = x
         this.y = y
         width = 1.0f
         height = 1.0f
-        val widthInPixels = ceil(engine. worldToScreenX(width))
+        bitmap = loadBitmap(spriteName)
+    }
+
+    protected fun loadBitmap(spriteName: String): Bitmap {
+        val widthInPixels = ceil(engine.worldToScreenX(width))
         val heightInPixels = ceil(engine.worldToScreenY(height))
-        bitmap = BitmapUtils.loadScaledBitmap(engine.context,
+        return BitmapUtils.loadScaledBitmap(
+            engine.context,
             spriteName,
             widthInPixels.toInt(),
-            heightInPixels.toInt())
+            heightInPixels.toInt()
+        )
     }
 
     override fun render(canvas: Canvas, transform: Matrix, paint: Paint) {

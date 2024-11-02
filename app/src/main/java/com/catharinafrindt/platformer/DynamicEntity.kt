@@ -5,15 +5,16 @@ import androidx.core.math.MathUtils.clamp
 private const val MAX_DELTA = 0.49f
 const val GRAVITY = 40f
 
-class DynamicEntity(spriteName: String, x: Float, y: Float) : StaticEntity(spriteName, x, y) {
+open class DynamicEntity(spriteName: String, x: Float, y: Float) : StaticEntity(spriteName, x, y) {
     var velX = 0f
     var velY = 0f
+    var isOnGround = false
 
     override fun update(dt: Float) {
         super.update(dt)
         moveHorizontally(dt)
         moveVertically(dt)
-
+        isOnGround = false
     }
 
     override fun onCollision(that: Entity) {
@@ -25,9 +26,10 @@ class DynamicEntity(spriteName: String, x: Float, y: Float) : StaticEntity(sprit
             x += overlap.x
             velX = 0f
         }
-        if (overlap.y != 0.0f) {
+        if (overlap.y != 0.0f) { // either hit head or feet
             y += overlap.y
             velY = 0f
+            isOnGround = (overlap.y < 0)
         }
     }
 
