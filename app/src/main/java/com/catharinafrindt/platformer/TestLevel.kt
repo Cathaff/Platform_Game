@@ -10,10 +10,13 @@ class TestLevel : LevelData() {
 
         tiles = arrayOf(
             intArrayOf(2,0,1,0,4),
-            intArrayOf(2, 3, 0, 3, 4),
-            intArrayOf(2, 3, 0, 3, 4),
-            intArrayOf(2, 3, 0, 3, 4),
-            intArrayOf(2, 3, 0, 3, 4),
+            intArrayOf(2, 0, 0, 0, 4),
+            intArrayOf(2, 0, 0, 0, 4),
+            intArrayOf(2, 0, 0, 0, 4),
+            intArrayOf(2, 0, 0, 0, 4),
+            intArrayOf(2, 0, 0, 0, 4),
+            intArrayOf(2, 0, 0, 0, 4),
+            intArrayOf(2, 0, 0, 0, 4),
             intArrayOf(2,3,3,3,4)
         )
     }

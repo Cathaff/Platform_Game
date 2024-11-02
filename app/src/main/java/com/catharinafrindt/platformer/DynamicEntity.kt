@@ -16,6 +16,21 @@ class DynamicEntity(spriteName: String, x: Float, y: Float) : StaticEntity(sprit
 
     }
 
+    override fun onCollision(that: Entity) {
+        var overlap = getOverlap(this, that)
+        if (overlap == null) {
+            return
+        }
+        if (overlap.x != 0.0f) {
+            x += overlap.x
+            velX = 0f
+        }
+        if (overlap.y != 0.0f) {
+            y += overlap.y
+            velY = 0f
+        }
+    }
+
     private fun moveVertically(dt: Float) {
         velY += GRAVITY * dt
         val deltaY = clamp(velY * dt, -MAX_DELTA, MAX_DELTA)

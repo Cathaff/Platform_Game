@@ -14,7 +14,20 @@ class LevelManager(data: LevelData) {
     fun update(dt: Float) {
         entities.forEach { it.update(dt) }
         //collision check
+        checkCollisions()
         addAndRemoveEntities()
+    }
+
+    private fun checkCollisions() {
+        for (e in entities) {
+            if (e == player) {
+                continue
+            }
+            if (isColliding(e, player)) {
+                e.onCollision(player)
+                player.onCollision(e)
+            }
+        }
     }
 
     private fun addAndRemoveEntities() {

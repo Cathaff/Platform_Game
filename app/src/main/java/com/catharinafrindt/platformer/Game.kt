@@ -30,7 +30,11 @@ class Game(context: Context) : SurfaceView(context), Runnable, SurfaceHolder.Cal
 
     private val camera = Viewport(screenWidth(), screenHeight(), 0.0f, 8.0f)
     private val level: LevelManager = LevelManager(TestLevel())
-
+    fun worldToScreenX(worldDistance: Float) = camera.worldToScreenX(worldDistance)
+    fun worldToScreenY(worldDistance: Float) = camera.worldToScreenY(worldDistance)
+    fun screenHeight() = context.resources.displayMetrics.heightPixels
+    fun screenWidth() = context.resources.displayMetrics.widthPixels
+    fun levelHeight() = level.levelHeight
 
     override fun run() {
         Log.d(tag, "run()")
@@ -43,12 +47,6 @@ class Game(context: Context) : SurfaceView(context), Runnable, SurfaceHolder.Cal
             render()
         }
     }
-
-    fun worldToScreenX(worldDistance : Float) = camera.worldToScreenX(worldDistance)
-    fun worldToScreenY(worldDistance : Float) = camera.worldToScreenY(worldDistance)
-    fun screenHeight() = context.resources.displayMetrics.heightPixels
-    fun screenWidth() = context.resources.displayMetrics.widthPixels
-    fun levelHeight() = level.levelHeight
 
     private fun render() {
         val canvas = holder?.lockCanvas() ?: return
@@ -78,6 +76,7 @@ class Game(context: Context) : SurfaceView(context), Runnable, SurfaceHolder.Cal
 
     fun onPause() {
         Log.d(tag, "onPause()")
+        isRunning = false
     }
 
     fun onResume() {
