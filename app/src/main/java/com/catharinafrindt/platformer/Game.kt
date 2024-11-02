@@ -14,6 +14,7 @@ import kotlin.random.Random
 //const val pixelsPerMeter = 50
 var RNG = Random(uptimeMillis())
 lateinit var engine : Game
+val NANOS_TO_SECOND = 1.0f / 1000000000.0f
 
 class Game(context: Context) : SurfaceView(context), Runnable, SurfaceHolder.Callback {
     private val tag = "Game"
@@ -27,17 +28,18 @@ class Game(context: Context) : SurfaceView(context), Runnable, SurfaceHolder.Cal
     private lateinit var gameThread : Thread
     @Volatile var isRunning : Boolean = false
 
-    private val camera = Viewport(screenWidth(), screenHeight(), 0.0f, 2.0f)
+    private val camera = Viewport(screenWidth(), screenHeight(), 0.0f, 8.0f)
     private val level: LevelManager = LevelManager(TestLevel())
 
 
     override fun run() {
         Log.d(tag, "run()")
+        var lastFrame = System.nanoTime()
         while(isRunning) {
-            // calculate the delta time
-            // update all entities passing in dt
+            val dt = (System.nanoTime() - lastFrame) * NANOS_TO_SECOND
+            lastFrame = System.nanoTime()
             // handle input
-            update()
+            update(dt)
             render()
         }
     }
@@ -46,6 +48,7 @@ class Game(context: Context) : SurfaceView(context), Runnable, SurfaceHolder.Cal
     fun worldToScreenY(worldDistance : Float) = camera.worldToScreenY(worldDistance)
     fun screenHeight() = context.resources.displayMetrics.heightPixels
     fun screenWidth() = context.resources.displayMetrics.widthPixels
+    fun levelHeight() = level.levelHeight
 
     private fun render() {
         val canvas = holder?.lockCanvas() ?: return
@@ -53,10 +56,7 @@ class Game(context: Context) : SurfaceView(context), Runnable, SurfaceHolder.Cal
         val paint = Paint()
         var transform = Matrix()
         var position: PointF
-        camera.lookAt(2.5f, 0.5f)
-
         val visible = buildVisibleSet()
-
 
         visible.forEach {
             transform.reset()
@@ -71,8 +71,9 @@ class Game(context: Context) : SurfaceView(context), Runnable, SurfaceHolder.Cal
         return level.entities.filter { camera.inView(it) }
     }
 
-    private fun update() {
-        level.update(0.1f)
+    private fun update(dt: Float) {
+        level.update(dt)
+        camera.lookAt(level.player)
     }
 
     fun onPause() {
