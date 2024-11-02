@@ -34,7 +34,9 @@ open class DynamicEntity(spriteName: String, x: Float, y: Float) : StaticEntity(
     }
 
     private fun moveVertically(dt: Float) {
-        velY += GRAVITY * dt
+        if (!isOnGround) {
+            velY += GRAVITY * dt
+        }
         val deltaY = clamp(velY * dt, -MAX_DELTA, MAX_DELTA)
         y += deltaY
         if (top > engine.levelHeight()) {
