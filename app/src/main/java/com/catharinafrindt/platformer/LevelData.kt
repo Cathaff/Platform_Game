@@ -1,6 +1,8 @@
 package com.catharinafrindt.platformer
 
 const val PLAYER = "blue_left1"
+const val ENEMY = "spearsup_brown"
+const val HEART = "lifehearth_full"
 const val NULLSPRITE = "nullsprite"
 const val NO_TILE = 0
 

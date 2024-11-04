@@ -1,10 +1,13 @@
 package com.catharinafrindt.platformer
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.PointF
+import android.graphics.RectF
 import android.os.SystemClock.uptimeMillis
 import android.util.AttributeSet
 import android.util.Log
@@ -19,12 +22,18 @@ val NANOS_TO_SECOND = 1.0f / 1000000000.0f
 class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context, attrs), Runnable,
     SurfaceHolder.Callback {
     private val tag = "Game"
+//    lateinit var player: Player
+    lateinit var enemy: Enemy
+    lateinit var heartBitmap: Bitmap
+    lateinit var halfHeartBitmap: Bitmap
+
     init {
         engine = this
         holder?.addCallback(this)
         holder?.setFixedSize(screenWidth(), screenHeight())
+        heartBitmap = BitmapFactory.decodeResource(context.resources, R.drawable.lifehearth_full)
+        halfHeartBitmap = BitmapFactory.decodeResource(context.resources, R.drawable.lifehearth_half)
     }
-
 
     private lateinit var gameThread : Thread
     @Volatile var isRunning : Boolean = false
@@ -60,12 +69,21 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
 
     private fun render() {
         val canvas = holder?.lockCanvas() ?: return
-        canvas.drawColor(Color.BLACK)
+        canvas.drawColor(Color.CYAN)
         val paint = Paint()
+        val heartLeft = 10f
+        val heartSpacing = 2f
+        for (i in 0 until 3) {
+            canvas.drawBitmap(
+                heartBitmap,
+                heartLeft + i * (heartBitmap.width + heartSpacing),
+                10f,
+                paint
+            )
+        }
         var transform = Matrix()
         var position: PointF
         val visible = buildVisibleSet()
-
         visible.forEach {
             transform.reset()
             position = camera.worldToScreen(it)
@@ -75,12 +93,39 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
         holder.unlockCanvasAndPost(canvas)
     }
 
+    private fun checkCollision() {
+//        if(RectF.intersects(player.getBound(), enemy.getBound())) {
+//            handleCollision(player, enemy)
+//        }
+    }
+
+    private fun handleCollision(player: Player, enemy: Enemy) {
+            player.health--
+            //loseHealth()
+    }
+
+    /*private fun loseHealth() {
+        val canvas = holder?.lockCanvas() ?: return
+        val paint = Paint()
+        val heartLeft = 10f
+        val heartSpacing = 2f
+        for (i in 0 until 3) {
+            canvas.drawBitmap(
+                halfHeartBitmap,
+                heartLeft + i * (heartBitmap.width + heartSpacing),
+                10f,
+                paint
+            )
+        }
+    }*/
+
     private fun buildVisibleSet() : List<Entity> {
         return level.entities.filter { camera.inView(it) }
     }
 
     private fun update(dt: Float) {
         level.update(dt)
+        checkCollision()
         camera.lookAt(level.player)
     }
 

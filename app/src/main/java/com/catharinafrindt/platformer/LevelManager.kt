@@ -13,7 +13,6 @@ class LevelManager(data: LevelData) {
 
     fun update(dt: Float) {
         entities.forEach { it.update(dt) }
-        //collision check
         checkCollisions()
         addAndRemoveEntities()
     }

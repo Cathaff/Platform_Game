@@ -3,9 +3,13 @@ package com.catharinafrindt.platformer
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.InputDevice
+import android.view.KeyEvent
+import android.view.MotionEvent
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowInsetsController
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -15,18 +19,61 @@ import androidx.core.view.WindowInsetsCompat
 class MainActivity : AppCompatActivity() {
     private val tag = "GameActivity"
     private lateinit var game: Game
+    private var gamepadListener: GamepadListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         game = findViewById<Game>(R.id.game)
         val input = TouchController(findViewById(R.id.touch_controller))
+        //val input = Gamepad(this)
         game.setControls(input)
+    }
+
+    fun setGamepadListener(listener: GamepadListener?) {
+        gamepadListener = listener
+    }
+
+    override fun dispatchGenericMotionEvent(ev: MotionEvent): Boolean {
+        if (gamepadListener != null) {
+            if (gamepadListener!!.dispatchGenericMotionEvent(ev)) {
+                return true
+            }
+        }
+        return super.dispatchGenericMotionEvent(ev)
+    }
+
+    override fun dispatchKeyEvent(ev: KeyEvent): Boolean {
+        if (gamepadListener != null) {
+            if (gamepadListener!!.dispatchKeyEvent(ev)) {
+                return true
+            }
+        }
+        return super.dispatchKeyEvent(ev)
     }
 
     override fun onResume() {
         super.onResume()
+        if (isGameControllerConnected()) {
+            Toast.makeText(this, "Gamepad detected!", Toast.LENGTH_LONG).show();
+        }
         game.onResume()
+    }
+
+    fun isGameControllerConnected(): Boolean {
+        val deviceIds = InputDevice.getDeviceIds()
+        for (deviceId in deviceIds) {
+            val dev = InputDevice.getDevice(deviceId)
+            val sources = dev!!.sources
+            if (sources and InputDevice.SOURCE_GAMEPAD == InputDevice.SOURCE_GAMEPAD ||
+                sources and InputDevice.SOURCE_JOYSTICK == InputDevice.SOURCE_JOYSTICK
+            ) {
+                Log.d(tag, "Felling controller")
+                return true
+            }
+        }
+        Log.d(tag, "Not")
+        return false
     }
 
     override fun onPause() {
