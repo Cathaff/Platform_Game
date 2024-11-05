@@ -4,6 +4,7 @@ class LevelManager(data: LevelData) {
     val entities = ArrayList<Entity>()
     var levelHeight: Float = 0.0f
     lateinit var player: Player
+    lateinit var enemy: Enemy
     private val entitiesToAdd = ArrayList<Entity>()
     private val entitiesToRemove = ArrayList<Entity>()
 
@@ -64,7 +65,12 @@ class LevelManager(data: LevelData) {
         if (spriteName == PLAYER) {
             player = Player(spriteName, x, y)
             addEntity(player)
-        } else {
+        }
+        else if (spriteName == ENEMY) {
+            enemy = Enemy(spriteName, x, y)
+            addEntity(enemy)
+        }
+        else {
             addEntity(StaticEntity(spriteName, x, y))
         }
 
