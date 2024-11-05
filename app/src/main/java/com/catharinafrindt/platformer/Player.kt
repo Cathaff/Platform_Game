@@ -3,28 +3,21 @@ package com.catharinafrindt.platformer
 import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.Paint
-import android.graphics.RectF
 
 const val PLAYER_RUN_SPEED = 6.0f //meters per second
 val PLAYER_JUMP_FORCE: Float = -(GRAVITY / 2f) //whatever feels good!
 const val LEFT = 1.0f
 const val RIGHT = -1.0f
-const val PLAYER_STARTING_HEALTH = 3
 
 class Player(spriteName: String, x: Float, y: Float) :
     DynamicEntity(spriteName, x, y) {
     var facing = LEFT
-    var health = PLAYER_STARTING_HEALTH
 
     init {
         width = 0.9f
         height = 0.9f
         engine.bitmapPool.remove(bitmap)
         bitmap = engine.bitmapPool.createBitmap(spriteName, width, height)
-    }
-
-    fun getBound() : RectF {
-        return RectF(x, y, x + width, y + height)
     }
 
     override fun update(dt: Float) {

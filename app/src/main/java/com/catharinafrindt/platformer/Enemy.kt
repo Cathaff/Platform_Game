@@ -4,8 +4,6 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.Paint
-import android.graphics.RectF
-import android.util.Log
 
 
 class Enemy(spriteName: String, x: Float, y: Float) : Entity() {
@@ -23,16 +21,4 @@ class Enemy(spriteName: String, x: Float, y: Float) : Entity() {
         canvas.drawBitmap(bitmap, transform, paint)
     }
 
-    fun getBound() : RectF {
-        return RectF(x, y, x + width, y + height)
-    }
-
-//    override fun render(canvas: Canvas, transform: Matrix, paint: Paint) {
-//        transform.preScale(facing, 1.0f)
-//        if (facing == RIGHT) {
-//            val offset = engine.worldToScreenX(width)
-//            transform.postTranslate(offset, 0.0f)
-//        }
-//        super.render(canvas, transform, paint)
-//    }
 }

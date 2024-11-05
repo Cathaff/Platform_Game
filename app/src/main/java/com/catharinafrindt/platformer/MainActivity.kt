@@ -19,7 +19,7 @@ import androidx.core.view.WindowInsetsCompat
 class MainActivity : AppCompatActivity() {
     private val tag = "GameActivity"
     private lateinit var game: Game
-    private var gamepadListener: GamepadListener? = null
+//    private var gamepadListener: GamepadListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,27 +30,27 @@ class MainActivity : AppCompatActivity() {
         game.setControls(input)
     }
 
-    fun setGamepadListener(listener: GamepadListener?) {
-        gamepadListener = listener
-    }
+//    fun setGamepadListener(listener: GamepadListener?) {
+//        gamepadListener = listener
+//    }
+//
+//    override fun dispatchGenericMotionEvent(ev: MotionEvent): Boolean {
+//        if (gamepadListener != null) {
+//            if (gamepadListener!!.dispatchGenericMotionEvent(ev)) {
+//                return true
+//            }
+//        }
+//        return super.dispatchGenericMotionEvent(ev)
+//    }
 
-    override fun dispatchGenericMotionEvent(ev: MotionEvent): Boolean {
-        if (gamepadListener != null) {
-            if (gamepadListener!!.dispatchGenericMotionEvent(ev)) {
-                return true
-            }
-        }
-        return super.dispatchGenericMotionEvent(ev)
-    }
-
-    override fun dispatchKeyEvent(ev: KeyEvent): Boolean {
-        if (gamepadListener != null) {
-            if (gamepadListener!!.dispatchKeyEvent(ev)) {
-                return true
-            }
-        }
-        return super.dispatchKeyEvent(ev)
-    }
+//    override fun dispatchKeyEvent(ev: KeyEvent): Boolean {
+//        if (gamepadListener != null) {
+//            if (gamepadListener!!.dispatchKeyEvent(ev)) {
+//                return true
+//            }
+//        }
+//        return super.dispatchKeyEvent(ev)
+//    }
 
     override fun onResume() {
         super.onResume()

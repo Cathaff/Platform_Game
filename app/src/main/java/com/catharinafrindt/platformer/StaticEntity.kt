@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.Paint
-import kotlin.math.ceil
 
 open class StaticEntity(spriteName: String, x: Float, y: Float) : Entity() {
     var bitmap: Bitmap
