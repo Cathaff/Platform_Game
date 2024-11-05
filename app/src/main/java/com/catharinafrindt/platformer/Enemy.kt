@@ -27,12 +27,6 @@ class Enemy(spriteName: String, x: Float, y: Float) : Entity() {
         return RectF(x, y, x + width, y + height)
     }
 
-    override fun onCollision(that: Entity) {
-        super.onCollision(that)
-        Log.d("tag", "once")
-
-    }
-
 //    override fun render(canvas: Canvas, transform: Matrix, paint: Paint) {
 //        transform.preScale(facing, 1.0f)
 //        if (facing == RIGHT) {

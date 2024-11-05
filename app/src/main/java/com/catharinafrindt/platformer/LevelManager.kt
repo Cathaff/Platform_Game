@@ -1,10 +1,13 @@
 package com.catharinafrindt.platformer
 
+import android.util.Log
+
 class LevelManager(data: LevelData) {
     val entities = ArrayList<Entity>()
     var levelHeight: Float = 0.0f
     lateinit var player: Player
     lateinit var enemy: Enemy
+    lateinit var game: Game
     private val entitiesToAdd = ArrayList<Entity>()
     private val entitiesToRemove = ArrayList<Entity>()
 
@@ -23,11 +26,25 @@ class LevelManager(data: LevelData) {
             if (e == player) {
                 continue
             }
+            else if (e == enemy) {
+                if(isColliding(e, player)) {
+                    Log.d("tag", "#hej")
+                    //lite delay så att inte man förlorar för mycket liv på en gång
+                    handleCollision(player, enemy)
+                }
+            }
             if (isColliding(e, player)) {
                 e.onCollision(player)
                 player.onCollision(e)
             }
         }
+    }
+
+    private fun handleCollision(player: Player, enemy: Enemy) {
+            player.health--
+            Log.d("tag2", "insideOfCollisioN")
+            Log.d("tag2", "Checking health ${player.health}")
+            //game.loseHealth()
     }
 
     private fun addAndRemoveEntities() {
