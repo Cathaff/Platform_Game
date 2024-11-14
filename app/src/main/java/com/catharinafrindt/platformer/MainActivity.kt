@@ -1,5 +1,4 @@
 package com.catharinafrindt.platformer
-
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -19,38 +18,38 @@ import androidx.core.view.WindowInsetsCompat
 class MainActivity : AppCompatActivity() {
     private val tag = "GameActivity"
     private lateinit var game: Game
-//    private var gamepadListener: GamepadListener? = null
+    private var gamepadListener: GamepadListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         game = findViewById<Game>(R.id.game)
-        val input = TouchController(findViewById(R.id.touch_controller))
-        //val input = Gamepad(this)
+//        val input = TouchController(findViewById(R.id.touch_controller))
+        val input = Gamepad(this)
         game.setControls(input)
     }
 
-//    fun setGamepadListener(listener: GamepadListener?) {
-//        gamepadListener = listener
-//    }
-//
-//    override fun dispatchGenericMotionEvent(ev: MotionEvent): Boolean {
-//        if (gamepadListener != null) {
-//            if (gamepadListener!!.dispatchGenericMotionEvent(ev)) {
-//                return true
-//            }
-//        }
-//        return super.dispatchGenericMotionEvent(ev)
-//    }
+    fun setGamepadListener(listener: GamepadListener?) {
+        gamepadListener = listener
+    }
 
-//    override fun dispatchKeyEvent(ev: KeyEvent): Boolean {
-//        if (gamepadListener != null) {
-//            if (gamepadListener!!.dispatchKeyEvent(ev)) {
-//                return true
-//            }
-//        }
-//        return super.dispatchKeyEvent(ev)
-//    }
+    override fun dispatchGenericMotionEvent(ev: MotionEvent): Boolean {
+        if (gamepadListener != null) {
+            if (gamepadListener!!.dispatchGenericMotionEvent(ev)) {
+                return true
+            }
+        }
+        return super.dispatchGenericMotionEvent(ev)
+    }
+
+    override fun dispatchKeyEvent(ev: KeyEvent): Boolean {
+        if (gamepadListener != null) {
+            if (gamepadListener!!.dispatchKeyEvent(ev)) {
+                return true
+            }
+        }
+        return super.dispatchKeyEvent(ev)
+    }
 
     override fun onResume() {
         super.onResume()
@@ -65,14 +64,11 @@ class MainActivity : AppCompatActivity() {
         for (deviceId in deviceIds) {
             val dev = InputDevice.getDevice(deviceId)
             val sources = dev!!.sources
-            if (sources and InputDevice.SOURCE_GAMEPAD == InputDevice.SOURCE_GAMEPAD ||
-                sources and InputDevice.SOURCE_JOYSTICK == InputDevice.SOURCE_JOYSTICK
+            if (sources and InputDevice.SOURCE_KEYBOARD == InputDevice.SOURCE_KEYBOARD
             ) {
-                Log.d(tag, "Felling controller")
                 return true
             }
         }
-        Log.d(tag, "Not")
         return false
     }
 
