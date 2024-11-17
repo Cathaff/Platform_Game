@@ -17,12 +17,12 @@ class Gamepad(val activity: MainActivity) : InputManager(), GamepadListener {
     }
 
     override fun dispatchGenericMotionEvent(event: MotionEvent): Boolean {
-        Log.d("Gamepad", "Horizontal Axis: $horizontalFactor, Vertical Axis: $verticalFactor")
+        Log.d("Gamepad", "Horizontal Axis: $_horizontalFactor, Vertical Axis: $_verticalFactor")
         if (event.source == InputDevice.SOURCE_JOYSTICK || event.source == InputDevice.SOURCE_GAMEPAD) {
             return false //we don't consume this event
         }
-        horizontalFactor = getInputFactor(event, MotionEvent.AXIS_X, MotionEvent.AXIS_HAT_X)
-        verticalFactor = getInputFactor(event, MotionEvent.AXIS_Y, MotionEvent.AXIS_HAT_Y)
+        _horizontalFactor = getInputFactor(event, MotionEvent.AXIS_X, MotionEvent.AXIS_HAT_X)
+        _verticalFactor = getInputFactor(event, MotionEvent.AXIS_Y, MotionEvent.AXIS_HAT_Y)
         return true //we did consume this event
     }
 
@@ -48,40 +48,40 @@ class Gamepad(val activity: MainActivity) : InputManager(), GamepadListener {
         var wasConsumed = false
         if (action == MotionEvent.ACTION_DOWN) {
             if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
-                verticalFactor -= 1.0f
+                _verticalFactor -= 1.0f
                 wasConsumed = true
             } else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
-                verticalFactor += 1.0f
+                _verticalFactor += 1.0f
                 wasConsumed = true
             }
             if (keyCode == KeyEvent.KEYCODE_A) {
-                horizontalFactor -= 1.0f
+                _horizontalFactor -= 1.0f
                 wasConsumed = true
             } else if (keyCode == KeyEvent.KEYCODE_D) {
-                horizontalFactor += 1.0f
+                _horizontalFactor += 1.0f
                 wasConsumed = true
             }
             if (isJumpKey(keyCode)) {
-                isJumping = true
+                _isJumping = true
                 wasConsumed = true
             }
         } else if (action == MotionEvent.ACTION_UP) {
             if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
-                verticalFactor += 1.0f
+                _verticalFactor += 1.0f
                 wasConsumed = true
             } else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
-                verticalFactor -= 1.0f
+                _verticalFactor -= 1.0f
                 wasConsumed = true
             }
             if (keyCode == KeyEvent.KEYCODE_A) {
-                horizontalFactor += 1.0f
+                _horizontalFactor += 1.0f
                 wasConsumed = true
             } else if (keyCode == KeyEvent.KEYCODE_D) {
-                horizontalFactor -= 1.0f
+                _horizontalFactor -= 1.0f
                 wasConsumed = true
             }
             if (isJumpKey(keyCode)) {
-                isJumping = false
+                _isJumping = false
                 wasConsumed = true
             }
         }

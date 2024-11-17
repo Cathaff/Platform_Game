@@ -98,6 +98,7 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
     }
 
     private fun update(dt: Float) {
+        inputs.update(dt)
         level.update(dt)
         camera.lookAt(level.player)
     }

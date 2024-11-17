@@ -24,8 +24,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         game = findViewById<Game>(R.id.game)
-//        val input = TouchController(findViewById(R.id.touch_controller))
-        val input = Gamepad(this)
+        val input = CompositeControl(
+            TouchController(findViewById(R.id.touch_controller)),
+            Gamepad(this),
+            Accelerometer(this)
+        )
         game.setControls(input)
     }
 

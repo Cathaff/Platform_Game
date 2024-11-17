@@ -22,10 +22,10 @@ class Player(spriteName: String, x: Float, y: Float) :
 
     override fun update(dt: Float) {
         val controls: InputManager = engine.getControls()
-        val direction: Float = controls.horizontalFactor
+        val direction: Float = controls._horizontalFactor
         velX = direction * PLAYER_RUN_SPEED
         facing = getFacingDirection(direction)
-        if (controls.isJumping && isOnGround) {
+        if (controls._isJumping && isOnGround) {
             velY = PLAYER_JUMP_FORCE
         }
         super.update(dt) //parent will integrate our velocity and time with our position
