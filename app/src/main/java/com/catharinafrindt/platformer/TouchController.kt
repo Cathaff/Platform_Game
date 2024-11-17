@@ -33,21 +33,21 @@ class TouchController(view: View) : InputManager(), View.OnTouchListener {
 
     private fun handleActionDown(buttonId: Int) {
         when (buttonId) {
-            R.id.gamepad_up -> verticalFactor -= 1
-            R.id.gamepad_down -> verticalFactor += 1
-            R.id.gamepad_left -> horizontalFactor -= 1
-            R.id.gamepad_right -> horizontalFactor += 1
-            R.id.gamepad_jump -> isJumping = true
+            R.id.gamepad_up -> _verticalFactor -= 1
+            R.id.gamepad_down -> _verticalFactor += 1
+            R.id.gamepad_left -> _horizontalFactor -= 1
+            R.id.gamepad_right -> _horizontalFactor += 1
+            R.id.gamepad_jump -> _isJumping = true
         }
     }
 
     private fun handleActionUp(buttonId: Int) {
         when (buttonId) {
-            R.id.gamepad_up -> verticalFactor += 1
-            R.id.gamepad_down -> verticalFactor -= 1
-            R.id.gamepad_left -> horizontalFactor += 1
-            R.id.gamepad_right -> horizontalFactor -= 1
-            R.id.gamepad_jump -> isJumping = false
+            R.id.gamepad_up -> _verticalFactor += 1
+            R.id.gamepad_down -> _verticalFactor -= 1
+            R.id.gamepad_left -> _horizontalFactor += 1
+            R.id.gamepad_right -> _horizontalFactor -= 1
+            R.id.gamepad_jump -> _isJumping = false
         }
     }
 }

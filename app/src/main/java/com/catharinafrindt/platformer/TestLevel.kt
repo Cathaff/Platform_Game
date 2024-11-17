@@ -10,24 +10,22 @@ class TestLevel : LevelData() {
         tileToBitmap[5] = "zigzagyellow_mud_round"
         tileToBitmap[6] = "zigzagyellow_mud_downroundright"
         tileToBitmap[7] = "zigzagyellow_mud_downroundleft"
+        tileToBitmap[8] = ENEMY
+        tileToBitmap[9] = "lifehearth_full"
 
         tiles = arrayOf(
-            intArrayOf(2, 3, 3, 3, 3, 3, 3, 3, 4),
-            intArrayOf(5, 0, 0, 0, 0, 0, 0, 5, 0),
-            intArrayOf(5, 0, 0, 0, 0, 0, 0, 5, 0),
-            intArrayOf(5, 0, 0, 1, 0, 0, 0, 5, 0),
-            intArrayOf(5, 0, 2, 3, 4, 0, 0, 5, 0),
-            intArrayOf(5, 0, 0, 0, 0, 0, 0, 5, 0),
-            intArrayOf(7, 3, 3, 3, 3, 3, 3, 6, 0),
-            intArrayOf(2, 3, 3, 3, 3, 3, 3, 3, 4),
-            intArrayOf(2, 3, 3, 3, 3, 3, 3, 3, 4),
-            intArrayOf(2, 3, 3, 3, 3, 3, 3, 3, 4),
-            intArrayOf(2, 3, 3, 3, 3, 3, 3, 3, 4),
-            intArrayOf(2, 3, 3, 3, 3, 3, 3, 3, 4),
-            intArrayOf(2, 3, 3, 3, 3, 3, 3, 3, 4),
-            intArrayOf(2, 3, 3, 3, 3, 3, 3, 3, 4),
-            intArrayOf(2, 3, 3, 3, 3, 3, 3, 3, 4),
-            intArrayOf(2, 3, 3, 3, 3, 3, 3, 3, 4),
+            intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            intArrayOf(0, 0, 0, 0, 0, 0, 0, 5, 0, 0),
+            intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            intArrayOf(0, 0, 0, 1, 0, 0, 0, 0, 0, 0),
+            intArrayOf(0, 0, 2, 3, 4, 0, 0, 0, 0, 0),
+            intArrayOf(0, 0, 0, 0, 0, 3, 0, 8, 0, 3),
+            intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 
         )
     }

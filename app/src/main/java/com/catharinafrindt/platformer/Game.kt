@@ -1,6 +1,9 @@
 package com.catharinafrindt.platformer
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.Paint
@@ -19,12 +22,14 @@ val NANOS_TO_SECOND = 1.0f / 1000000000.0f
 class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context, attrs), Runnable,
     SurfaceHolder.Callback {
     private val tag = "Game"
+    var heartBitmap: Bitmap
+
     init {
         engine = this
         holder?.addCallback(this)
         holder?.setFixedSize(screenWidth(), screenHeight())
+        heartBitmap = BitmapFactory.decodeResource(context.resources, R.drawable.lifehearth_full)
     }
-
 
     private lateinit var gameThread : Thread
     @Volatile var isRunning : Boolean = false
@@ -38,8 +43,8 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
     fun screenWidth() = context.resources.displayMetrics.widthPixels
     fun levelHeight() = level.levelHeight
     fun setControls(control: InputManager) {
-        inputs.onPause() //give the previous controller
-        inputs.onStop() //a chance to clean up
+        inputs.onPause()
+        inputs.onStop()
         inputs = control
         inputs.onStart()
     }
@@ -52,7 +57,6 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
         while(isRunning) {
             val dt = (System.nanoTime() - lastFrame) * NANOS_TO_SECOND
             lastFrame = System.nanoTime()
-            // handle input
             update(dt)
             render()
         }
@@ -60,12 +64,12 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
 
     private fun render() {
         val canvas = holder?.lockCanvas() ?: return
-        canvas.drawColor(Color.BLACK)
+        canvas.drawColor(Color.CYAN)
         val paint = Paint()
+        setHearts(canvas, paint)
         var transform = Matrix()
         var position: PointF
         val visible = buildVisibleSet()
-
         visible.forEach {
             transform.reset()
             position = camera.worldToScreen(it)
@@ -75,11 +79,26 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
         holder.unlockCanvasAndPost(canvas)
     }
 
+    private fun setHearts(canvas: Canvas, paint: Paint) {
+        val heartLeft = 10f
+        val heartSpacing = 2f
+        val health = level.playerHealth
+        for (i in 0 until health) {
+            canvas.drawBitmap(
+                heartBitmap,
+                heartLeft + i * (heartBitmap.width + heartSpacing),
+                10f,
+                paint
+            )
+        }
+    }
+
     private fun buildVisibleSet() : List<Entity> {
         return level.entities.filter { camera.inView(it) }
     }
 
     private fun update(dt: Float) {
+        inputs.update(dt)
         level.update(dt)
         camera.lookAt(level.player)
     }

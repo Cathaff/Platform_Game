@@ -5,7 +5,8 @@ import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.Paint
 
-open class StaticEntity(spriteName: String, x: Float, y: Float) : Entity() {
+
+class Enemy(spriteName: String, x: Float, y: Float) : Entity() {
     var bitmap: Bitmap
 
     init {
@@ -19,4 +20,5 @@ open class StaticEntity(spriteName: String, x: Float, y: Float) : Entity() {
     override fun render(canvas: Canvas, transform: Matrix, paint: Paint) {
         canvas.drawBitmap(bitmap, transform, paint)
     }
+
 }
