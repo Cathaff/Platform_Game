@@ -11,19 +11,19 @@ class VirtualJoystick(view: View) : InputManager() {
     protected var stickCenterX = 0f //the stick center is placed wherever the user put their finger down
     protected var stickCenterY = 0f //we can then calculate how far they've slide the stick from that position
 
-    private val joyStickRegion: View
-    private val joystick: View
+    private val joystickRegion: View
+    private val joystickStick: View
     private val buttonRegion: View
 
     init {
-        joyStickRegion = view.findViewById<View>(R.id.joystick_region)
-        joystick = view.findViewById<View>(R.id.joystick_stick)
+        joystickRegion = view.findViewById<View>(R.id.joystick_region)
+        joystickStick = view.findViewById<View>(R.id.joystick_stick)
         buttonRegion = view.findViewById<View>(R.id.button_region)
 
-        joyStickRegion.setOnTouchListener(JoystickTouchListener())
+        joystickRegion.setOnTouchListener(JoystickTouchListener())
         buttonRegion.setOnTouchListener(ActionButtonTouchListener())
 
-        Log.d(TAG, "Max joystick travel (pixels): $maxStickTravel")
+        Log.d(TAG, "Max joystickStick travel (pixels): $maxStickTravel")
     }
 
     private inner class ActionButtonTouchListener : View.OnTouchListener {
@@ -54,7 +54,7 @@ class VirtualJoystick(view: View) : InputManager() {
                 //get the proportion to the maxStickTravel
                 _horizontalFactor = (event.getX(0) - stickCenterX) / maxStickTravel
                 _verticalFactor = (event.getY(0) - stickCenterY) / maxStickTravel
-                clampInputs() //nothing stops the user from pulling the joystick across the entire screen. So lets clamp the inputs. :)
+                clampInputs() //nothing stops the user from pulling the joystickStick across the entire screen. So lets clamp the inputs. :)
 
                 val clampedX =stickCenterX + (_horizontalFactor * maxStickTravel)
                 val clampedY = stickCenterY + (_verticalFactor * maxStickTravel)
@@ -66,18 +66,18 @@ class VirtualJoystick(view: View) : InputManager() {
     }
 
     private fun updateStickPosition(x: Float, y: Float) {
-        val regionCenterX = (joyStickRegion.width / 2).toFloat()
-        val regionCenterY = (joyStickRegion.height / 2).toFloat()
+        val regionCenterX = (joystickRegion.width / 2).toFloat()
+        val regionCenterY = (joystickRegion.height / 2).toFloat()
 
-        val translationX = x - regionCenterX - (joystick.width / 2)
-        val translationY = y - regionCenterY - (joystick.height / 2)
+        val translationX = x - regionCenterX - (joystickStick.width / 2)
+        val translationY = y - regionCenterY - (joystickStick.height / 2)
 
-        joystick.translationX = translationX
-        joystick.translationY = translationY
+        joystickStick.translationX = translationX
+        joystickStick.translationY = translationY
     }
 
     private fun returnStickToCenter() {
-        joystick.animate()
+        joystickStick.animate()
             .translationX(0f)
             .translationY(0f)
             .setDuration(100)

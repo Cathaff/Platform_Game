@@ -35,7 +35,7 @@ class CompositeControl(vararg inputs: InputManager) : InputManager() {
         clampInputs()
     }
 
-    private fun clampInputs() {
+    override fun clampInputs() {
         _horizontalFactor = _horizontalFactor.coerceIn(-1.0f, 1.0f)
         _verticalFactor = _verticalFactor.coerceIn(-1.0f, 1.0f)
     }

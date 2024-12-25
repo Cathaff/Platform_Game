@@ -9,7 +9,7 @@ open class InputManager {
     var _horizontalFactor = 0.0f
     var _isJumping = false
 
-    protected fun clampInputs() {
+    protected open fun clampInputs() {
         _verticalFactor = clamp(_verticalFactor, MIN, MAX)
         _horizontalFactor = clamp(_horizontalFactor, MIN, MAX)
     }

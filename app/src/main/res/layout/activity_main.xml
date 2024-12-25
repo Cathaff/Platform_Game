@@ -9,4 +9,5 @@
         android:layout_height="fill_parent" />
 
     <include layout="@layout/touch_controller" />
+    <include layout="@layout/virtual_joystick" />
 </FrameLayout>
