@@ -5,7 +5,8 @@ val PLAYER_STARTING_HEALTH = 3
 class LevelManager(data: LevelData) {
     val entities = ArrayList<Entity>()
     var levelHeight: Float = 0.0f
-    var countCoins = 0
+    var collectedCoins = 0
+    var totalCoins = 0
     var  playerHealth : Int = PLAYER_STARTING_HEALTH
     lateinit var player: Player
     private lateinit var enemy: Enemy
@@ -52,7 +53,7 @@ class LevelManager(data: LevelData) {
 
     private fun handleCollectibleCollision(player: Player, coin: Coin) {
         removeEntity(coin)
-        countCoins -= 1
+        collectedCoins += 1
     }
 
     private fun addAndRemoveEntities() {
@@ -93,11 +94,11 @@ class LevelManager(data: LevelData) {
         }
         else if (spriteName == ENEMY) {
             enemy = Enemy(spriteName, x, y)
-            addEntity(coin)
+            addEntity(enemy)
         }
         else if (spriteName == COIN) {
             coin = Coin(spriteName, x, y)
-            countCoins += 1
+            totalCoins += 1
             addEntity(coin)
         }
         else {
