@@ -24,6 +24,7 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
     private val tag = "Game"
     var heartBitmap: Bitmap
     var coinBitmap: Bitmap
+    private var statusRender: StatusRender
 
     init {
         engine = this
@@ -31,7 +32,7 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
         holder?.setFixedSize(screenWidth(), screenHeight())
         heartBitmap = BitmapFactory.decodeResource(context.resources, R.drawable.lifehearth_full)
         coinBitmap = BitmapFactory.decodeResource(context.resources, R.drawable.coinyellow)
-
+        statusRender = StatusRender(heartBitmap, coinBitmap)
     }
 
     private lateinit var gameThread : Thread
@@ -69,12 +70,7 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
         val canvas = holder?.lockCanvas() ?: return
         canvas.drawColor(Color.CYAN)
         val paint = Paint()
-        renderHud(canvas, paint)
-        holder.unlockCanvasAndPost(canvas)
-    }
-
-    private fun renderHud(canvas: Canvas, paint: Paint) {
-        setHearts(canvas, paint)
+        statusRender.renderHUD(canvas, paint, level)
         var transform = Matrix()
         var position: PointF
         val visible = buildVisibleSet()
@@ -84,46 +80,7 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
             transform.postTranslate(position.x, position.y)
             it.render(canvas, transform, paint)
         }
-    }
-
-    private fun coinStatus(heartLeft: Float, heartSpacing: Float, canvas: Canvas, paint: Paint) {
-        paint.color = Color.BLACK
-        paint.textSize = 30f
-        val health = level.playerHealth
-
-        val posFromHeartX = heartLeft + (health * (heartBitmap.width + heartSpacing)) + 30f
-        val posFromHeartY = heartBitmap.height / 2f
-
-        canvas.drawBitmap(
-            coinBitmap,
-            posFromHeartX,
-            posFromHeartY,
-            paint
-        )
-
-        val textX = posFromHeartX + (coinBitmap.width + heartSpacing)
-        val textY = 25f + posFromHeartY / 2f
-        canvas.drawText("X ${level.collectedCoins}", textX, textY, paint)
-
-        val rowSpacing = heartBitmap.height + 20f
-        val rowUnderHeartX = heartLeft
-        val rowUnderHeartY = 30f + rowSpacing
-        canvas.drawText("Total Coins: ${level.totalCoins}", rowUnderHeartX, rowUnderHeartY, paint)
-    }
-
-    private fun setHearts(canvas: Canvas, paint: Paint) {
-        val heartLeft = 10f
-        val heartSpacing = 2f
-        val health = level.playerHealth
-        for (i in 0 until health) {
-            canvas.drawBitmap(
-                heartBitmap,
-                heartLeft + i * (heartBitmap.width + heartSpacing),
-                10f,
-                paint
-            )
-        }
-        coinStatus(heartLeft, heartSpacing, canvas, paint)
+        holder.unlockCanvasAndPost(canvas)
     }
 
     private fun buildVisibleSet() : List<Entity> {

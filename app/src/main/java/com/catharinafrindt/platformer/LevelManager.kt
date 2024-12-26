@@ -54,6 +54,7 @@ class LevelManager(data: LevelData) {
     private fun handleCollectibleCollision(player: Player, coin: Coin) {
         removeEntity(coin)
         collectedCoins += 1
+        totalCoins -= 1
     }
 
     private fun addAndRemoveEntities() {
