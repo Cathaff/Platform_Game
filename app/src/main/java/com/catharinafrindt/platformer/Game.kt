@@ -25,6 +25,7 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
     var heartBitmap: Bitmap
     var coinBitmap: Bitmap
     private var statusRender: StatusRender
+    private var jukeBox = Jukebox(context.assets)
 
     init {
         engine = this
@@ -40,7 +41,7 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
     var inputs = InputManager() // a valid null-controller
     private val camera = Viewport(screenWidth(), screenHeight(), 0.0f, 8.0f)
     val bitmapPool = BitmapPool(this)
-    private val level: LevelManager = LevelManager(TestLevel())
+    private val level: LevelManager = LevelManager(TestLevel(), context)
     fun worldToScreenX(worldDistance: Float) = camera.worldToScreenX(worldDistance)
     fun worldToScreenY(worldDistance: Float) = camera.worldToScreenY(worldDistance)
     fun screenHeight() = context.resources.displayMetrics.heightPixels
@@ -106,6 +107,7 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
 
     fun onDestroy() {
         Log.d(tag, "onDestroy()")
+        jukeBox.destroy()
     }
 
     override fun surfaceCreated(holder: SurfaceHolder) {
@@ -113,6 +115,7 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
         isRunning = true
         gameThread = Thread(this)
         gameThread.start()
+        jukeBox.play(SFX.levelSound)
     }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {

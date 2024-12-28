@@ -1,8 +1,10 @@
 package com.catharinafrindt.platformer
 
+import android.content.Context
+
 val PLAYER_STARTING_HEALTH = 3
 
-class LevelManager(data: LevelData) {
+class LevelManager(data: LevelData, context: Context) {
     val entities = ArrayList<Entity>()
     var levelHeight: Float = 0.0f
     var collectedCoins = 0
@@ -13,6 +15,7 @@ class LevelManager(data: LevelData) {
     private lateinit var coin: Coin
     private val entitiesToAdd = ArrayList<Entity>()
     private val entitiesToRemove = ArrayList<Entity>()
+    private var jukeBox = Jukebox(context.assets)
 
     init {
         loadAssets(data)
@@ -55,6 +58,7 @@ class LevelManager(data: LevelData) {
         removeEntity(coin)
         collectedCoins += 1
         totalCoins -= 1
+        jukeBox.play(SFX.coins)
     }
 
     private fun addAndRemoveEntities() {
