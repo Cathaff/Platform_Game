@@ -5,10 +5,24 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 
+const val STAGE_WIDTH = 1280
+const val STAGE_HEIGHT = 672
+
 class StatusRender(private val heartBitmap: Bitmap, private val coinBitmap: Bitmap) : HUD
 {
-     override fun renderHUD(canvas: Canvas, paint: Paint, level: LevelManager) {
-        setHearts(canvas, paint, level)
+     override fun renderHUD(canvas: Canvas, paint: Paint, level: LevelManager, isGameOver: Boolean) {
+        if(!isGameOver)
+        {
+            setHearts(canvas, paint, level)
+        }
+        else
+        {
+            val centerX = STAGE_WIDTH / 2.0f
+            val centerY = STAGE_HEIGHT / 2.0f
+            paint.textAlign = Paint.Align.CENTER
+            paint.textSize = 70f
+            canvas.drawText("GAME OVER", centerX, centerY, paint)
+        }
     }
 
     private fun setHearts(canvas: Canvas, paint: Paint, level: LevelManager) {

@@ -24,6 +24,8 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
     private val tag = "Game"
     var heartBitmap: Bitmap
     var coinBitmap: Bitmap
+    private var fingerDown = false
+    private var isGameOver = false
     private var statusRender: StatusRender
     private var jukeBox = Jukebox(context.assets)
 
@@ -71,7 +73,7 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
         val canvas = holder?.lockCanvas() ?: return
         canvas.drawColor(Color.CYAN)
         val paint = Paint()
-        statusRender.renderHUD(canvas, paint, level)
+        statusRender.renderHUD(canvas, paint, level, isGameOver)
         var transform = Matrix()
         var position: PointF
         val visible = buildVisibleSet()
@@ -89,9 +91,22 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
     }
 
     private fun update(dt: Float) {
+        if(isGameOver) {
+            jukeBox.destroy()
+            return
+        }
         inputs.update(dt)
         level.update(dt)
         camera.lookAt(level.player)
+
+        checkGameOver()
+    }
+
+    private fun checkGameOver() {
+        if(level.playerHealth <= 0)
+        {
+            isGameOver = true
+        }
     }
 
     fun onPause() {
@@ -107,7 +122,6 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
 
     fun onDestroy() {
         Log.d(tag, "onDestroy()")
-        jukeBox.destroy()
     }
 
     override fun surfaceCreated(holder: SurfaceHolder) {
@@ -115,7 +129,7 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
         isRunning = true
         gameThread = Thread(this)
         gameThread.start()
-        jukeBox.play(SFX.levelSound)
+        jukeBox.play(SFX.levelSound,-1)
     }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {

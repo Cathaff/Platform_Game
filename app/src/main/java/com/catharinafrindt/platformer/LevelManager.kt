@@ -58,7 +58,7 @@ class LevelManager(data: LevelData, context: Context) {
         removeEntity(coin)
         collectedCoins += 1
         totalCoins -= 1
-        jukeBox.play(SFX.coins)
+        jukeBox.play(SFX.coins, 0)
     }
 
     private fun addAndRemoveEntities() {

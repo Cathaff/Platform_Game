@@ -26,7 +26,6 @@ class Jukebox(private val assetManager: AssetManager) {
             .setAudioAttributes(attr)
             .setMaxStreams(MAX_STREAMS)
             .build()
-//        Log.d(tag, "soundpool created!")
         SFX.coins = loadSound("coins.wav")
         SFX.levelSound = loadSound("level1.wav")
     }
@@ -41,11 +40,10 @@ class Jukebox(private val assetManager: AssetManager) {
         return 0
     }
 
-    fun play(soundID: Int) {
+    fun play(soundID: Int, loop: Int) {
         val leftVolume = 1f
         val rightVolume = 1f
         val priority = 0
-        val loop = 0
         val playbackRate = 1.0f
         if (soundID > 0) {
             soundPool.play(soundID, leftVolume, rightVolume, priority, loop, playbackRate)
