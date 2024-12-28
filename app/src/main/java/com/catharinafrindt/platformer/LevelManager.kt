@@ -5,9 +5,12 @@ val PLAYER_STARTING_HEALTH = 3
 class LevelManager(data: LevelData) {
     val entities = ArrayList<Entity>()
     var levelHeight: Float = 0.0f
+    var collectedCoins = 0
+    var totalCoins = 0
     var  playerHealth : Int = PLAYER_STARTING_HEALTH
     lateinit var player: Player
-    lateinit var enemy: Enemy
+    private lateinit var enemy: Enemy
+    private lateinit var coin: Coin
     private val entitiesToAdd = ArrayList<Entity>()
     private val entitiesToRemove = ArrayList<Entity>()
 
@@ -31,6 +34,11 @@ class LevelManager(data: LevelData) {
                     handleCollision(player, enemy)
                 }
             }
+            else if (e == coin) {
+                if(isColliding(e, player)) {
+                    handleCollectibleCollision(player,coin)
+                }
+            }
             if (isColliding(e, player)) {
                 e.onCollision(player)
                 player.onCollision(e)
@@ -43,6 +51,12 @@ class LevelManager(data: LevelData) {
             if (playerHealth < 0) { playerHealth = 0 }
     }
 
+    private fun handleCollectibleCollision(player: Player, coin: Coin) {
+        removeEntity(coin)
+        collectedCoins += 1
+        totalCoins -= 1
+    }
+
     private fun addAndRemoveEntities() {
         entities.removeAll(entitiesToRemove)
         entitiesToRemove.clear()
@@ -51,11 +65,11 @@ class LevelManager(data: LevelData) {
         entitiesToAdd.clear()
     }
 
-    fun addEntity(e: Entity) {
+    private fun addEntity(e: Entity) {
         entitiesToAdd.add(e)
     }
 
-    fun removeEntity(e: Entity) {
+    private fun removeEntity(e: Entity) {
         entitiesToRemove.add(e)
     }
 
@@ -82,6 +96,11 @@ class LevelManager(data: LevelData) {
         else if (spriteName == ENEMY) {
             enemy = Enemy(spriteName, x, y)
             addEntity(enemy)
+        }
+        else if (spriteName == COIN) {
+            coin = Coin(spriteName, x, y)
+            totalCoins += 1
+            addEntity(coin)
         }
         else {
             addEntity(StaticEntity(spriteName, x, y))

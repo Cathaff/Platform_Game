@@ -23,12 +23,16 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
     SurfaceHolder.Callback {
     private val tag = "Game"
     var heartBitmap: Bitmap
+    var coinBitmap: Bitmap
+    private var statusRender: StatusRender
 
     init {
         engine = this
         holder?.addCallback(this)
         holder?.setFixedSize(screenWidth(), screenHeight())
         heartBitmap = BitmapFactory.decodeResource(context.resources, R.drawable.lifehearth_full)
+        coinBitmap = BitmapFactory.decodeResource(context.resources, R.drawable.coinyellow)
+        statusRender = StatusRender(heartBitmap, coinBitmap)
     }
 
     private lateinit var gameThread : Thread
@@ -66,7 +70,7 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
         val canvas = holder?.lockCanvas() ?: return
         canvas.drawColor(Color.CYAN)
         val paint = Paint()
-        setHearts(canvas, paint)
+        statusRender.renderHUD(canvas, paint, level)
         var transform = Matrix()
         var position: PointF
         val visible = buildVisibleSet()
@@ -77,20 +81,6 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
             it.render(canvas, transform, paint)
         }
         holder.unlockCanvasAndPost(canvas)
-    }
-
-    private fun setHearts(canvas: Canvas, paint: Paint) {
-        val heartLeft = 10f
-        val heartSpacing = 2f
-        val health = level.playerHealth
-        for (i in 0 until health) {
-            canvas.drawBitmap(
-                heartBitmap,
-                heartLeft + i * (heartBitmap.width + heartSpacing),
-                10f,
-                paint
-            )
-        }
     }
 
     private fun buildVisibleSet() : List<Entity> {

@@ -12,6 +12,7 @@ class TestLevel : LevelData() {
         tileToBitmap[7] = "zigzagyellow_mud_downroundleft"
         tileToBitmap[8] = ENEMY
         tileToBitmap[9] = "lifehearth_full"
+        tileToBitmap[10] = COIN
 
         tiles = arrayOf(
             intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
@@ -20,7 +21,7 @@ class TestLevel : LevelData() {
             intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
             intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
             intArrayOf(0, 0, 0, 0, 0, 0, 0, 5, 0, 0),
-            intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            intArrayOf(0, 0, 0, 0, 0, 10, 0, 0, 0, 0),
             intArrayOf(0, 0, 0, 1, 0, 0, 0, 0, 0, 0),
             intArrayOf(0, 0, 2, 3, 4, 0, 0, 0, 0, 0),
             intArrayOf(0, 0, 0, 0, 0, 3, 0, 8, 0, 3),
