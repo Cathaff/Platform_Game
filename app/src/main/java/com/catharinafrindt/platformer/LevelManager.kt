@@ -11,11 +11,12 @@ class LevelManager(data: LevelData, context: Context) {
     var totalCoins = 0
     var  playerHealth : Int = PLAYER_STARTING_HEALTH
     lateinit var player: Player
-    private lateinit var enemy: Enemy
-    private lateinit var coin: Coin
     private val entitiesToAdd = ArrayList<Entity>()
     private val entitiesToRemove = ArrayList<Entity>()
     private var jukeBox = Jukebox(context.assets)
+    private val INVULNERABILITY_DURATION = 3.0f
+    private var isPlayerInvulnerable  = false
+    private var invulnerabilityTimer  = 0.0f
 
     init {
         loadAssets(data)
@@ -23,24 +24,35 @@ class LevelManager(data: LevelData, context: Context) {
 
     fun update(dt: Float) {
         entities.forEach { it.update(dt) }
+        if (isPlayerInvulnerable)
+        {
+            invulnerabilityTimer -= dt
+        }
+        if (invulnerabilityTimer <= 0)
+        {
+            isPlayerInvulnerable = false
+        }
         checkCollisions()
         addAndRemoveEntities()
     }
 
     private fun checkCollisions() {
         for (e in entities) {
-            if (e == player) {
+            if (e is Player) {
                 continue
             }
-            else if (e == enemy) {
+            else if (e is Enemy) {
                 if(isColliding(e, player)) {
-                    handleCollision(player, enemy)
+                    handleCollision(player, e)
                 }
             }
-            else if (e == coin) {
+            else if (e is Coin) {
                 if(isColliding(e, player)) {
-                    handleCollectibleCollision(player,coin)
+                    handleCollectibleCollision(player, e)
                 }
+            }
+            else if (e is Flag) {
+                    continue
             }
             if (isColliding(e, player)) {
                 e.onCollision(player)
@@ -50,8 +62,12 @@ class LevelManager(data: LevelData, context: Context) {
     }
 
     private fun handleCollision(player: Player, enemy: Enemy) {
+        if (!isPlayerInvulnerable) {
             playerHealth--
             if (playerHealth < 0) { playerHealth = 0 }
+                isPlayerInvulnerable = true
+                invulnerabilityTimer = INVULNERABILITY_DURATION
+        }
     }
 
     private fun handleCollectibleCollision(player: Player, coin: Coin) {
@@ -98,13 +114,17 @@ class LevelManager(data: LevelData, context: Context) {
             addEntity(player)
         }
         else if (spriteName == ENEMY) {
-            enemy = Enemy(spriteName, x, y)
+            val enemy = Enemy(spriteName, x, y)
             addEntity(enemy)
         }
         else if (spriteName == COIN) {
-            coin = Coin(spriteName, x, y)
+            val coin = Coin(spriteName, x, y)
             totalCoins += 1
             addEntity(coin)
+        }
+        else if (spriteName == "flag") {
+            val flag = Flag(spriteName, x, y)
+            addEntity(flag)
         }
         else {
             addEntity(StaticEntity(spriteName, x, y))
