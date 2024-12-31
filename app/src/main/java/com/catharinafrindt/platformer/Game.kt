@@ -1,5 +1,6 @@
 package com.catharinafrindt.platformer
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -11,6 +12,7 @@ import android.graphics.PointF
 import android.os.SystemClock.uptimeMillis
 import android.util.AttributeSet
 import android.util.Log
+import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import kotlin.random.Random
@@ -68,6 +70,34 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
             render()
         }
     }
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        when(event?.action){
+            MotionEvent.ACTION_DOWN -> fingerDown = true
+            MotionEvent.ACTION_UP -> {
+                fingerDown = false
+                if(isGameOver) {
+                    restart()
+                }
+            }
+        }
+        return true
+    }
+
+    private fun restart() {
+        level.playerHealth = PLAYER_STARTING_HEALTH
+        level.collectedCoins = 0
+        level.totalCoins = level.fixedTotalCoins
+        level.entities.removeAll { it is Coin }
+        level.fixedCoinsToAddWhenRestart.forEach { pos ->
+            val coin = Coin("coinyellow", pos.x, pos.y)
+            level.addEntity(coin)
+        }
+        level.player.respawn()
+        isGameOver = false
+    }
+
 
     private fun render() {
         val canvas = holder?.lockCanvas() ?: return

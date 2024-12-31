@@ -11,7 +11,10 @@ const val RIGHT = -1.0f
 
 class Player(spriteName: String, x: Float, y: Float) :
     DynamicEntity(spriteName, x, y) {
-    var facing = LEFT
+    var facing = RIGHT
+
+    private val initialX = x
+    private val initialY = y
 
     init {
         width = 0.9f
@@ -47,5 +50,11 @@ class Player(spriteName: String, x: Float, y: Float) :
             transform.postTranslate(offset, 0.0f)
         }
         super.render(canvas, transform, paint)
+    }
+
+     fun respawn() {
+         facing = RIGHT
+         x = initialX
+         y = initialY
     }
 }

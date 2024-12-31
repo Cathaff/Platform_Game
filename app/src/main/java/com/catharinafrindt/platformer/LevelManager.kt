@@ -1,16 +1,19 @@
 package com.catharinafrindt.platformer
 
 import android.content.Context
+import android.graphics.PointF
 
 val PLAYER_STARTING_HEALTH = 3
 
 class LevelManager(data: LevelData, context: Context) {
     val entities = ArrayList<Entity>()
+    var fixedTotalCoins = 0
     var levelHeight: Float = 0.0f
     var collectedCoins = 0
     var totalCoins = 0
-    var  playerHealth : Int = PLAYER_STARTING_HEALTH
+    var playerHealth : Int = PLAYER_STARTING_HEALTH
     lateinit var player: Player
+    val fixedCoinsToAddWhenRestart = ArrayList<PointF>()
     private val entitiesToAdd = ArrayList<Entity>()
     private val entitiesToRemove = ArrayList<Entity>()
     private var jukeBox = Jukebox(context.assets)
@@ -85,7 +88,7 @@ class LevelManager(data: LevelData, context: Context) {
         entitiesToAdd.clear()
     }
 
-    private fun addEntity(e: Entity) {
+    fun addEntity(e: Entity) {
         entitiesToAdd.add(e)
     }
 
@@ -120,7 +123,9 @@ class LevelManager(data: LevelData, context: Context) {
         else if (spriteName == COIN) {
             val coin = Coin(spriteName, x, y)
             totalCoins += 1
+            fixedTotalCoins += 1
             addEntity(coin)
+            fixedCoinsToAddWhenRestart.add(PointF(x,y))
         }
         else if (spriteName == "flag") {
             val flag = Flag(spriteName, x, y)

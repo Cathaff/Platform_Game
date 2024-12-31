@@ -22,6 +22,8 @@ class StatusRender(private val heartBitmap: Bitmap, private val coinBitmap: Bitm
             paint.textAlign = Paint.Align.CENTER
             paint.textSize = 70f
             canvas.drawText("GAME OVER", centerX, centerY, paint)
+            paint.textSize = 40f
+            canvas.drawText("press to restart", centerX, centerY+50f, paint)
         }
     }
 
