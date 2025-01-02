@@ -1,23 +1,53 @@
 package com.catharinafrindt.platformer
-import android.content.Intent
+
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowInsetsController
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 
-class MainActivity : AppCompatActivity() {
+class GameActivity : AppCompatActivity() {
+    private val TAG = "GameActivity"
+    lateinit var game : Game
+    private lateinit var joystickLayout: View
+    private lateinit var touchControllerLayout: View
+    private lateinit var input: CompositeControl
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        findViewById<Button>(R.id.startGameButton)?.setOnClickListener {
-            val intent = Intent(this, GameActivity::class.java)
-            startActivity(intent)
+        setContentView(R.layout.activity_game)
+        game = findViewById<Game>(R.id.game)
+        joystickLayout = findViewById(R.id.virtual_joystick)
+        touchControllerLayout = findViewById(R.id.touch_controller)
+
+        val chooseControl = 1
+
+        when(chooseControl) {
+            1 -> { touchControllerLayout.visibility = View.GONE; input = CompositeControl(VirtualJoystick(joystickLayout)) }
+            2 -> { joystickLayout.visibility = View.GONE; input = CompositeControl(TouchController(touchControllerLayout)) }
+            3 -> { touchControllerLayout.visibility = View.GONE; joystickLayout.visibility = View.GONE;
+                input = CompositeControl(Accelerometer(this)) }
+            else -> throw IllegalArgumentException("Invalid choice.")
         }
+
+        game.setControls(input)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        game.onResume()
+    }
+
+    override fun onPause() {
+        game.onPause()
+        super.onPause()
+    }
+
+    override fun onDestroy() {
+        game.onDestroy()
+        super.onDestroy()
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -52,5 +82,4 @@ class MainActivity : AppCompatActivity() {
             insetsController.hide(WindowInsets.Type.systemBars())
         }
     }
-
 }
