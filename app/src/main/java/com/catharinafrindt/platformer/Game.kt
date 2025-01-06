@@ -1,9 +1,9 @@
 package com.catharinafrindt.platformer
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.Paint
@@ -11,6 +11,7 @@ import android.graphics.PointF
 import android.os.SystemClock.uptimeMillis
 import android.util.AttributeSet
 import android.util.Log
+import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import kotlin.random.Random
@@ -24,7 +25,11 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
     private val tag = "Game"
     var heartBitmap: Bitmap
     var coinBitmap: Bitmap
+    private var fingerDown = false
+    private var isGameOver = false
     private var statusRender: StatusRender
+    var jukeBox = Jukebox(context.assets)
+    var background = BackgroundMusic(context.assets)
 
     init {
         engine = this
@@ -40,7 +45,7 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
     var inputs = InputManager() // a valid null-controller
     private val camera = Viewport(screenWidth(), screenHeight(), 0.0f, 8.0f)
     val bitmapPool = BitmapPool(this)
-    private val level: LevelManager = LevelManager(TestLevel())
+    private val level: LevelManager = LevelManager(TestLevel(), context)
     fun worldToScreenX(worldDistance: Float) = camera.worldToScreenX(worldDistance)
     fun worldToScreenY(worldDistance: Float) = camera.worldToScreenY(worldDistance)
     fun screenHeight() = context.resources.displayMetrics.heightPixels
@@ -66,11 +71,40 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        when(event?.action){
+            MotionEvent.ACTION_DOWN -> fingerDown = true
+            MotionEvent.ACTION_UP -> {
+                fingerDown = false
+                if(isGameOver) {
+                    restart()
+                }
+            }
+        }
+        return true
+    }
+
+    private fun restart() {
+        level.playerHealth = PLAYER_STARTING_HEALTH
+        level.collectedCoins = 0
+        level.totalCoins = level.fixedTotalCoins
+        level.entities.removeAll { it is Coin }
+        level.fixedCoinsToAddWhenRestart.forEach { pos ->
+            val coin = Coin("coinyellow", pos.x, pos.y)
+            level.addEntity(coin)
+        }
+        level.player.respawn()
+        background.playMusic()
+        isGameOver = false
+    }
+
+
     private fun render() {
         val canvas = holder?.lockCanvas() ?: return
         canvas.drawColor(Color.CYAN)
         val paint = Paint()
-        statusRender.renderHUD(canvas, paint, level)
+        statusRender.renderHUD(canvas, paint, level, isGameOver)
         var transform = Matrix()
         var position: PointF
         val visible = buildVisibleSet()
@@ -88,9 +122,23 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
     }
 
     private fun update(dt: Float) {
+        if(isGameOver) {
+            jukeBox.destroy()
+            background.destroy()
+            return
+        }
         inputs.update(dt)
         level.update(dt)
         camera.lookAt(level.player)
+
+        checkGameOver()
+    }
+
+    private fun checkGameOver() {
+        if(level.playerHealth <= 0)
+        {
+            isGameOver = true
+        }
     }
 
     fun onPause() {
@@ -113,6 +161,7 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
         isRunning = true
         gameThread = Thread(this)
         gameThread.start()
+        background.playMusic()
     }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {

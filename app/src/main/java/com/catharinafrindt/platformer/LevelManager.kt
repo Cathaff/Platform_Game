@@ -1,18 +1,25 @@
 package com.catharinafrindt.platformer
 
+import android.content.Context
+import android.graphics.PointF
+
 val PLAYER_STARTING_HEALTH = 3
 
-class LevelManager(data: LevelData) {
+class LevelManager(data: LevelData, context: Context) {
     val entities = ArrayList<Entity>()
+    var fixedTotalCoins = 0
     var levelHeight: Float = 0.0f
     var collectedCoins = 0
     var totalCoins = 0
-    var  playerHealth : Int = PLAYER_STARTING_HEALTH
+    var playerHealth : Int = PLAYER_STARTING_HEALTH
     lateinit var player: Player
-    private lateinit var enemy: Enemy
-    private lateinit var coin: Coin
+    val fixedCoinsToAddWhenRestart = ArrayList<PointF>()
     private val entitiesToAdd = ArrayList<Entity>()
     private val entitiesToRemove = ArrayList<Entity>()
+    private var jukeBox = Jukebox(context.assets)
+    private val INVULNERABILITY_DURATION = 3.0f
+    private var isPlayerInvulnerable  = false
+    private var invulnerabilityTimer  = 0.0f
 
     init {
         loadAssets(data)
@@ -20,24 +27,35 @@ class LevelManager(data: LevelData) {
 
     fun update(dt: Float) {
         entities.forEach { it.update(dt) }
+        if (isPlayerInvulnerable)
+        {
+            invulnerabilityTimer -= dt
+        }
+        if (invulnerabilityTimer <= 0)
+        {
+            isPlayerInvulnerable = false
+        }
         checkCollisions()
         addAndRemoveEntities()
     }
 
     private fun checkCollisions() {
         for (e in entities) {
-            if (e == player) {
+            if (e is Player) {
                 continue
             }
-            else if (e == enemy) {
+            else if (e is Enemy) {
                 if(isColliding(e, player)) {
-                    handleCollision(player, enemy)
+                    handleCollision(player, e)
                 }
             }
-            else if (e == coin) {
+            else if (e is Coin) {
                 if(isColliding(e, player)) {
-                    handleCollectibleCollision(player,coin)
+                    handleCollectibleCollision(player, e)
                 }
+            }
+            else if (e is Flag) {
+                    continue
             }
             if (isColliding(e, player)) {
                 e.onCollision(player)
@@ -47,14 +65,20 @@ class LevelManager(data: LevelData) {
     }
 
     private fun handleCollision(player: Player, enemy: Enemy) {
+        if (!isPlayerInvulnerable) {
             playerHealth--
+            jukeBox.play(SFX.hurt, 0)
             if (playerHealth < 0) { playerHealth = 0 }
+                isPlayerInvulnerable = true
+                invulnerabilityTimer = INVULNERABILITY_DURATION
+        }
     }
 
     private fun handleCollectibleCollision(player: Player, coin: Coin) {
         removeEntity(coin)
         collectedCoins += 1
         totalCoins -= 1
+        jukeBox.play(SFX.coins, 0)
     }
 
     private fun addAndRemoveEntities() {
@@ -65,7 +89,7 @@ class LevelManager(data: LevelData) {
         entitiesToAdd.clear()
     }
 
-    private fun addEntity(e: Entity) {
+    fun addEntity(e: Entity) {
         entitiesToAdd.add(e)
     }
 
@@ -94,13 +118,19 @@ class LevelManager(data: LevelData) {
             addEntity(player)
         }
         else if (spriteName == ENEMY) {
-            enemy = Enemy(spriteName, x, y)
+            val enemy = Enemy(spriteName, x, y)
             addEntity(enemy)
         }
         else if (spriteName == COIN) {
-            coin = Coin(spriteName, x, y)
+            val coin = Coin(spriteName, x, y)
             totalCoins += 1
+            fixedTotalCoins += 1
             addEntity(coin)
+            fixedCoinsToAddWhenRestart.add(PointF(x,y))
+        }
+        else if (spriteName == "flag") {
+            val flag = Flag(spriteName, x, y)
+            addEntity(flag)
         }
         else {
             addEntity(StaticEntity(spriteName, x, y))

@@ -8,25 +8,21 @@ class TestLevel : LevelData() {
         tileToBitmap[3] = "zigzaggrass_squar"
         tileToBitmap[4] = "zigzaggrass_2roundright"
         tileToBitmap[5] = "zigzagyellow_mud_round"
-        tileToBitmap[6] = "zigzagyellow_mud_downroundright"
-        tileToBitmap[7] = "zigzagyellow_mud_downroundleft"
-        tileToBitmap[8] = ENEMY
-        tileToBitmap[9] = "lifehearth_full"
-        tileToBitmap[10] = COIN
+        tileToBitmap[6] = ENEMY
+        tileToBitmap[7] = COIN
+        tileToBitmap[8] = "flag"
 
         tiles = arrayOf(
-            intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-            intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-            intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-            intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-            intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-            intArrayOf(0, 0, 0, 0, 0, 0, 0, 5, 0, 0),
-            intArrayOf(0, 0, 0, 0, 0, 10, 0, 0, 0, 0),
-            intArrayOf(0, 0, 0, 1, 0, 0, 0, 0, 0, 0),
-            intArrayOf(0, 0, 2, 3, 4, 0, 0, 0, 0, 0),
-            intArrayOf(0, 0, 0, 0, 0, 3, 0, 8, 0, 3),
-            intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-            intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            intArrayOf(0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            intArrayOf(0, 0, 0, 0, 0, 0, 0, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            intArrayOf(0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0),
+            intArrayOf(0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 8),
+            intArrayOf(2, 3, 3, 3, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 3, 3, 3, 3, 0, 0, 3, 3, 4, 0, 0, 0, 4),
+            intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 
         )
     }

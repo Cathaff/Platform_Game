@@ -29,7 +29,7 @@ private const val MAX_ANGLE = Math.PI.toFloat() / 2.0f // 90 degrees in radians
 private const val MIN_INPUT = -1.0f
 private const val MAX_INPUT = 1.0f
 
-class Accelerometer(val _activity: MainActivity) : InputManager() {
+class Accelerometer(val _activity: GameActivity) : InputManager() {
 
     init {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
