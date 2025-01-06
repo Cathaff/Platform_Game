@@ -4,11 +4,13 @@ import android.content.res.AssetFileDescriptor
 import android.content.res.AssetManager
 import android.media.AudioAttributes
 import android.media.SoundPool
+import android.util.Log
 import java.io.IOException
 
 object SFX{
     var coins = 0
-    var levelSound = 1
+    var hurt = 1
+    var finish_level = 2
 }
 const val MAX_STREAMS = 3
 
@@ -27,7 +29,8 @@ class Jukebox(private val assetManager: AssetManager) {
             .setMaxStreams(MAX_STREAMS)
             .build()
         SFX.coins = loadSound("coins.wav")
-        SFX.levelSound = loadSound("level1.wav")
+        SFX.hurt = loadSound("hurt.wav")
+        SFX.finish_level = loadSound("finish_level.wav")
     }
 
     private fun loadSound(fileName: String): Int{
@@ -35,7 +38,7 @@ class Jukebox(private val assetManager: AssetManager) {
             val descriptor: AssetFileDescriptor = assetManager.openFd(fileName)
             return soundPool.load(descriptor, 1)
         }catch(e: IOException){
-//            Log.d(tag, "Unable to load $fileName! Check the filename, and make sure it's in the assets-folder.")
+            Log.d(tag, "Unable to load $fileName! Check the filename, and make sure it's in the assets-folder.")
         }
         return 0
     }
@@ -52,6 +55,5 @@ class Jukebox(private val assetManager: AssetManager) {
 
     fun destroy() {
         soundPool.release()
-        //the soundpool can no longer be used! you have to create a new soundpool.
     }
 }

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.Paint
@@ -29,7 +28,8 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
     private var fingerDown = false
     private var isGameOver = false
     private var statusRender: StatusRender
-    private var jukeBox = Jukebox(context.assets)
+    var jukeBox = Jukebox(context.assets)
+    var background = BackgroundMusic(context.assets)
 
     init {
         engine = this
@@ -95,6 +95,7 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
             level.addEntity(coin)
         }
         level.player.respawn()
+        background.playMusic()
         isGameOver = false
     }
 
@@ -123,6 +124,7 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
     private fun update(dt: Float) {
         if(isGameOver) {
             jukeBox.destroy()
+            background.destroy()
             return
         }
         inputs.update(dt)
@@ -159,7 +161,7 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
         isRunning = true
         gameThread = Thread(this)
         gameThread.start()
-        jukeBox.play(SFX.levelSound,-1)
+        background.playMusic()
     }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {

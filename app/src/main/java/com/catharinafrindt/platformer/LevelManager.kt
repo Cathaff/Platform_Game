@@ -67,6 +67,7 @@ class LevelManager(data: LevelData, context: Context) {
     private fun handleCollision(player: Player, enemy: Enemy) {
         if (!isPlayerInvulnerable) {
             playerHealth--
+            jukeBox.play(SFX.hurt, 0)
             if (playerHealth < 0) { playerHealth = 0 }
                 isPlayerInvulnerable = true
                 invulnerabilityTimer = INVULNERABILITY_DURATION
