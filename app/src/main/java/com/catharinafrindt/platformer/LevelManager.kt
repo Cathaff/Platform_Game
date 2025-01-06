@@ -2,7 +2,6 @@ package com.catharinafrindt.platformer
 
 import android.content.Context
 import android.graphics.PointF
-import android.util.Log
 
 val PLAYER_STARTING_HEALTH = 3
 
@@ -48,12 +47,23 @@ class LevelManager(data: LevelData, context: Context) {
             }
             else if (e is Enemy) {
                 if(isColliding(e, player)) {
-                    handleCollision(player, e)
+                    handleCollision()
+                }
+            }
+            else if (e is MovingEnemy) {
+                if(isColliding(e, player)) {
+                    handleCollision()
+                }
+                entities.forEach { other ->
+                    if (other != e && isColliding(e, other)) {
+                        e.onCollision(other)
+                        other.onCollision(e)
+                    }
                 }
             }
             else if (e is Coin) {
                 if(isColliding(e, player)) {
-                    handleCollectibleCollision(player, e)
+                    handleCollectibleCollision(e)
                 }
             }
             else if (e is Flag) {
@@ -71,7 +81,7 @@ class LevelManager(data: LevelData, context: Context) {
         }
     }
 
-    private fun handleCollision(player: Player, enemy: Enemy) {
+    private fun handleCollision() {
         if (!isPlayerInvulnerable) {
             playerHealth--
             jukeBox.play(SFX.hurt, 0)
@@ -81,7 +91,7 @@ class LevelManager(data: LevelData, context: Context) {
         }
     }
 
-    private fun handleCollectibleCollision(player: Player, coin: Coin) {
+    private fun handleCollectibleCollision(coin: Coin) {
         removeEntity(coin)
         collectedCoins += 1
         totalCoins -= 1
@@ -128,7 +138,18 @@ class LevelManager(data: LevelData, context: Context) {
             val enemy = Enemy(spriteName, x, y)
             addEntity(enemy)
         }
+        else if (spriteName == "enemyblockiron") {
+            val movingEnemy = MovingEnemy(spriteName, x, y)
+            addEntity(movingEnemy)
+        }
         else if (spriteName == COIN) {
+            val coin = Coin(spriteName, x, y)
+            totalCoins += 1
+            fixedTotalCoins += 1
+            addEntity(coin)
+            fixedCoinsToAddWhenRestart.add(PointF(x,y))
+        }
+        else if (spriteName == "ruby") {
             val coin = Coin(spriteName, x, y)
             totalCoins += 1
             fixedTotalCoins += 1
