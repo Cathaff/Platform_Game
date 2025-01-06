@@ -27,9 +27,12 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
     var coinBitmap: Bitmap
     private var fingerDown = false
     private var isGameOver = false
+    private var levelCompleted = false
+    private var gameLevelOne = true
+    private var playEndGameLevelSound = true
     private var statusRender: StatusRender
     var jukeBox = Jukebox(context.assets)
-    var background = BackgroundMusic(context.assets)
+    var background = BackgroundMusic(context.assets, gameLevelOne)
 
     init {
         engine = this
@@ -45,7 +48,7 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
     var inputs = InputManager() // a valid null-controller
     private val camera = Viewport(screenWidth(), screenHeight(), 0.0f, 8.0f)
     val bitmapPool = BitmapPool(this)
-    private val level: LevelManager = LevelManager(TestLevel(), context)
+    private var level: LevelManager = LevelManager(TestLevel(), context)
     fun worldToScreenX(worldDistance: Float) = camera.worldToScreenX(worldDistance)
     fun worldToScreenY(worldDistance: Float) = camera.worldToScreenY(worldDistance)
     fun screenHeight() = context.resources.displayMetrics.heightPixels
@@ -80,6 +83,9 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
                 if(isGameOver) {
                     restart()
                 }
+                if(levelCompleted) {
+                    newGameLevel()
+                }
             }
         }
         return true
@@ -97,6 +103,26 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
         level.player.respawn()
         background.playMusic()
         isGameOver = false
+        levelCompleted = false
+    }
+
+    private fun newGameLevel() {
+        gameLevelOne = false
+        level = LevelManager(TestLevelTwo(), context)
+        level.playerHealth = PLAYER_STARTING_HEALTH
+        level.collectedCoins = 0
+        level.totalCoins = level.fixedTotalCoins
+        level.entities.removeAll { it is Coin }
+        level.fixedCoinsToAddWhenRestart.forEach { pos ->
+            val coin = Coin("coinyellow", pos.x, pos.y)
+            level.addEntity(coin)
+        }
+        level.player.respawn()
+        background = BackgroundMusic(context.assets, gameLevelOne)
+        background.playMusic()
+        isGameOver = false
+        levelCompleted = false
+        playEndGameLevelSound = true
     }
 
 
@@ -104,7 +130,7 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
         val canvas = holder?.lockCanvas() ?: return
         canvas.drawColor(Color.CYAN)
         val paint = Paint()
-        statusRender.renderHUD(canvas, paint, level, isGameOver)
+        statusRender.renderHUD(canvas, paint, level, isGameOver, levelCompleted)
         var transform = Matrix()
         var position: PointF
         val visible = buildVisibleSet()
@@ -127,17 +153,35 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
             background.destroy()
             return
         }
+
+        if(levelCompleted) {
+            if(playEndGameLevelSound) {
+                background.destroy()
+                jukeBox.play(SFX.finish, 0)
+                playEndGameLevelSound = false
+                return
+            }
+        }
+
         inputs.update(dt)
         level.update(dt)
         camera.lookAt(level.player)
 
         checkGameOver()
+        checkGameLevelEnd()
     }
 
     private fun checkGameOver() {
         if(level.playerHealth <= 0)
         {
             isGameOver = true
+        }
+    }
+
+    private fun checkGameLevelEnd() {
+        if(level.levelCompleted)
+        {
+            levelCompleted = true
         }
     }
 

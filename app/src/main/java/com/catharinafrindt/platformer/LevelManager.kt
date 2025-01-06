@@ -2,6 +2,7 @@ package com.catharinafrindt.platformer
 
 import android.content.Context
 import android.graphics.PointF
+import android.util.Log
 
 val PLAYER_STARTING_HEALTH = 3
 
@@ -11,6 +12,7 @@ class LevelManager(data: LevelData, context: Context) {
     var levelHeight: Float = 0.0f
     var collectedCoins = 0
     var totalCoins = 0
+    var levelCompleted  = false
     var playerHealth : Int = PLAYER_STARTING_HEALTH
     lateinit var player: Player
     val fixedCoinsToAddWhenRestart = ArrayList<PointF>()
@@ -55,7 +57,12 @@ class LevelManager(data: LevelData, context: Context) {
                 }
             }
             else if (e is Flag) {
-                    continue
+                if(isColliding(e, player)) {
+                    if (fixedTotalCoins == collectedCoins)
+                    {
+                        levelCompleted = true
+                    }
+                }
             }
             if (isColliding(e, player)) {
                 e.onCollision(player)

@@ -10,7 +10,7 @@ import java.io.IOException
 object SFX{
     var coins = 0
     var hurt = 1
-    var finish_level = 2
+    var finish = 2
 }
 const val MAX_STREAMS = 3
 
@@ -30,7 +30,7 @@ class Jukebox(private val assetManager: AssetManager) {
             .build()
         SFX.coins = loadSound("coins.wav")
         SFX.hurt = loadSound("hurt.wav")
-        SFX.finish_level = loadSound("finish_level.wav")
+        SFX.finish = loadSound("finish.wav")
     }
 
     private fun loadSound(fileName: String): Int{
