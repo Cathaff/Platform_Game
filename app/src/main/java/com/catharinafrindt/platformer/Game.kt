@@ -40,9 +40,6 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
         holder?.setFixedSize(screenWidth(), screenHeight())
         heartBitmap = BitmapFactory.decodeResource(context.resources, R.drawable.lifehearth_full)
         coinBitmap = BitmapFactory.decodeResource(context.resources, R.drawable.coinyellow)
-        if(!gameLevelOne) {
-            coinBitmap = BitmapFactory.decodeResource(context.resources, R.drawable.ruby)
-        }
         statusRender = StatusRender(heartBitmap, coinBitmap)
     }
 
@@ -84,7 +81,12 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
             MotionEvent.ACTION_UP -> {
                 fingerDown = false
                 if(isGameOver) {
-                    restart()
+                    if(!gameLevelOne) {
+                        newGameLevel()
+                    }
+                    else {
+                        restart()
+                    }
                 }
                 if(levelCompleted) {
                     newGameLevel()
@@ -116,6 +118,8 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
         level.collectedCoins = 0
         level.totalCoins = level.fixedTotalCoins
         level.entities.removeAll { it is Coin }
+        coinBitmap = BitmapFactory.decodeResource(context.resources, R.drawable.ruby)
+        statusRender = StatusRender(heartBitmap, coinBitmap)
         level.fixedCoinsToAddWhenRestart.forEach { pos ->
             val coin = Coin("ruby", pos.x, pos.y)
             level.addEntity(coin)
